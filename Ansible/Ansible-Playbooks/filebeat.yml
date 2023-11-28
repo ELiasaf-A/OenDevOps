@@ -1,0 +1,28 @@
+---
+- name: Install and Configure Filebeat
+  hosts: your_log_servers
+  become: yes
+
+  tasks:
+    - name: Download and Install Filebeat
+      yum:
+        name: filebeat
+        state: present
+
+    - name: Configure Filebeat
+      template:
+        src: /path/filebeat.yml.j2
+        dest: /etc/filebeat/filebeat.yml
+      notify: restart filebeat
+
+    - name: Enable and Start Filebeat
+      service:
+        name: filebeat
+        enabled: yes
+        state: started
+
+  handlers:
+    - name: restart filebeat
+      service:
+        name: filebeat
+        state: restarted
