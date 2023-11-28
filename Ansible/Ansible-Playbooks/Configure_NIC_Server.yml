@@ -1,0 +1,11 @@
+---
+- name: Update NIC's DNS Configuration 
+  hosts: iis
+  gather_facts: no
+  tasks:
+  - name: Set multiple lookup addresses Ethernet0 adapter
+    ansible.windows.win_dns_client:
+      adapter_names: 'Ethernet0'
+      dns_servers:
+      - 192.168.0.0   #Server-AD01
+      - 192.168.0.0  #Server-DC01 (new)

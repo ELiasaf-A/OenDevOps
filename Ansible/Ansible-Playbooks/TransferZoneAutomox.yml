@@ -1,0 +1,16 @@
+---
+- name: TransferZoneAutomox.yml
+  hosts: 
+  tasks:
+  - name: change amagent's zone key to SERVERS-TripleCCC
+    ansible.windows.win_command:
+      cmd: amagent.exe --setkey licence
+      chdir: C:\Program Files (x86)\Automox\
+  - name: Stop the amagent service
+    win_service:
+      name: amagent
+      state: stopped
+  - name: Start the amagent service
+    win_service:
+      name: amagent
+      state: started

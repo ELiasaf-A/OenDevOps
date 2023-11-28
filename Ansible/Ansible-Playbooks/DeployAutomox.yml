@@ -1,0 +1,7 @@
+---
+- hosts: 
+  tasks:
+  - name: Install Automox
+    win_shell: |
+    $absolutePathToMsi = "\\namepath\Automox_Installer-1.42.22.msi" ACCESSKEY=licene"
+    Start-Process msiexec.exe -Wait -ArgumentList "/I $absolutePathToMsi /quiet"

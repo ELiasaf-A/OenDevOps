@@ -1,0 +1,44 @@
+---
+- name: Install Splunk
+  hosts: ws
+  tasks:
+  - name: Copy the installer script
+    ansible.windows.win_copy:
+      src: \\path\scripts\splunkinstall.ps1
+      dest: C:\
+      remote_src: yes
+  - name: Copy the installer msi
+    ansible.windows.win_copy:
+      src: \\path\tempsplunk\splunkforwarder.msi
+      dest: C:\
+      remote_src: yes
+  - name: Copy the installer spl
+    ansible.windows.win_copy:
+      src: \\path\tempsplunk\splunkclouduf.spl
+      dest: C:\
+      remote_src: yes
+
+
+  - name: install SplunkUniversalForwarder
+    win_shell: powershell.exe -ExecutionPolicy ByPass -File C:\splunkinstall.ps1
+    register: result1 # parse result from PS script to var
+
+  - name: display output from Script
+    set_fact:
+      vms: "{{ result1.stdout | regex_findall('(?<=VM: )(.*)') }}" # displays the result from PS script
+
+  - name: set up listener on port 9997
+    ansible.windows.win_command:
+      cmd: splunk.exe install app c:\splunkclouduf.spl -auth splunk_admin:pass
+      chdir: C:\Program Files\SplunkUniversalForwarder\bin
+
+  - name: restart splunk service
+    ansible.windows.win_command:
+      cmd: splunk restart
+      chdir: C:\Program Files\SplunkUniversalForwarder\bin
+
+  - name: check port is talking
+    ansible.windows.win_command:
+      cmd: netstat -an | find "9997"
+    register: result1 # parse result from PS script to var
+  - debug: var=ps.stdout_lines

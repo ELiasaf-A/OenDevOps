@@ -1,0 +1,17 @@
+---
+- name: make sure Excel is installed on hosts
+  hosts: name_host_server
+  tasks:
+  - name: Copy the install directory
+    ansible.windows.win_copy:
+      src: \\path\office2021\excel 2021
+      dest: C:\
+      remote_src: yes
+  - name: install Excel if not present
+    ansible.windows.win_package:
+      path: C:\excel 2021\setup.exe
+      state: present
+      arguments: 
+      - /configure 2021.xml
+      user_name: domain\user
+      user_password: password

@@ -1,0 +1,67 @@
+---
+- name: create vm demo
+  hosts: vcenter
+  vars: 
+    vcenter:
+      - vcenter_hostname: "name.domain"
+        vcenter_datacenter: "name"
+        vcenter_validate_certs: false
+        vcenter_username: "user@domain.com"
+        vcenter_password: "password"
+        vm_name: "Ansible_Test_VM"
+        vm_guestid: "Windows_NT"
+        vm_disk_gb: 50
+        vm_disk_type: "thick"
+        vm_disk_datastore: "name_datastore"
+        vm_hw_ram_mb: 2048
+        vm_hw_cpu_n: 2
+        vm_hw_scsi: "SAS"
+        vm_net_name: "name_nic"
+        vm_net_type: "E1000E"
+        vcenter_destination_folder: "name_cluster"
+        vm_iso_path: "ISO Microsoft\Windows\Server2022\en-us_windows_server_2022_x64_dvd_620d7eac.iso"
+        vm_state: "poweroff"
+  become: false
+  collections:
+    - community.vmware
+
+  tasks:
+#      - name: create folder
+#        vcenter_folder:
+#          hostname: "{{ vcenter_hostname }}"
+#          username: "{{ vcenter_username }}"
+#          password: "{{ vcenter_password }}"
+#          validate_certs: "{{ vcenter_validate_certs }}"
+#          datacenter_name: "{{ vcenter_datacenter }}"
+#          folder_name: "{{ vcenter_destination_folder }}"
+#          folder_type: vm
+#          state: present
+      - name: create VM
+        vmware_guest:
+          hostname: "{{ vcenter_hostname }}"
+          username: "{{ vcenter_username }}"
+          password: "{{ vcenter_password }}"
+          validate_certs: "{{ vcenter_validate_certs }}"
+          datacenter: "{{ vcenter_datacenter }}"
+          name: "{{ vm_name }}"
+          folder: "{{ vcenter_destination_folder }}"
+          state: "{{ vm_state }}"
+          guest_id: "{{ vm_guestid }}"
+          cluster: "{{ vcenter_cluster }}"
+          disk:
+            - size_gb: "{{ vm_disk_gb }}"
+              type: "{{ vm_disk_type }}"
+              datastore: "{{ vm_disk_datastore }}"
+          cdrom:
+            - controller_number: 0
+              unit_number: 0
+              state: present
+              type: iso
+              iso_path: "{{ vm_iso_path }}"
+          hardware:
+            memory_mb: "{{ vm_hw_ram_mb }}"
+            num_cpus: "{{ vm_hw_cpu_n }}"
+            scsi: "{{ vm_hw_scsi }}"
+          networks:
+            - name: "{{ vm_net_name }}"
+              device_name: "{{ vm_net_type }}"

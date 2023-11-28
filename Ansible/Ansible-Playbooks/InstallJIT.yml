@@ -1,0 +1,12 @@
+---
+- name: make sure JIT Scheduler is installed on hosts
+  hosts: comaxclient
+  tasks:
+  - name: install JIT Scheduler if not present
+    ansible.windows.win_package:
+      path: \\path\JIT Scheduler\jit.exe
+      state: present
+      arguments: 
+      - /Q
+      user_name: domain\user
+      user_password: password

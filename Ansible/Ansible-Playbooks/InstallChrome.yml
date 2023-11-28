@@ -1,0 +1,30 @@
+---
+- name: Install Chrome and set as default browser
+  hosts: windows
+  gather_facts: no
+
+  tasks:
+    - name: Download Chrome installer
+      win_get_url:
+        url: https://dl.google.com/chrome/install/standalone/GoogleChromeStandaloneEnterprise64.msi
+        dest: C:\Temp\GoogleChromeStandaloneEnterprise64.msi
+
+    - name: Install Chrome
+      win_package:
+        path: C:\Temp\GoogleChromeStandaloneEnterprise64.msi
+        product_id: '{4EA16AC7-FD5A-47C3-875B-DBF4A2008C83}'
+        arguments: '/qn'
+        state: present
+
+    - name: Set Chrome as default browser
+      win_shell: |
+        $ProgId = (New-Object -ComObject "WScript.Shell").RegRead("HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice\Progid")
+        if ($ProgId -ne "ChromeHTML") {
+          $defaultBrowserPath = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Clients\StartMenuInternet\Google Chrome\shell\open\command" -Name "(Default)").'(Default)'
+          $defaultBrowserPath = $defaultBrowserPath -replace '^"(.*?)"(.*)$','$1'
+          $defaultBrowserPathArgs = $defaultBrowserPath -replace '^".*?"\s*(.*)$','$1'
+          $defaultBrowserPathArgs = $defaultBrowserPathArgs -replace "%1",'http'
+          $defaultBrowserPathArgs = $defaultBrowserPathArgs -replace "%*", ''
+          $cmd = "cmd /c ftype HTTP=""$defaultBrowserPathArgs"" & assoc .htm=ChromeHTML & assoc .html=ChromeHTML & assoc .shtml=ChromeHTML & assoc .xht=ChromeHTML & assoc .xhtml=ChromeHTML & assoc .ftp=ChromeHTML"
+          Start-Process -FilePath $cmd -Verb RunAs -Wait
+        }

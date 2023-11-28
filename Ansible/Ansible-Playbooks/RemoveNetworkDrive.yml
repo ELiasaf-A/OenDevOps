@@ -1,0 +1,38 @@
+---
+- name: Remove Network Drive
+  hosts: opr
+  tasks:
+    - name: Remove network drive J
+      win_mapped_drive:
+        letter: J
+        state: absent
+
+    - name: Remove network drive K
+      win_mapped_drive:
+        letter: K
+        state: absent
+
+    - name: Remove network drive P
+      win_mapped_drive:
+        letter: P
+        state: absent
+
+    - name: Remove network drive Q
+      win_mapped_drive:
+        letter: Q
+        state: absent
+
+
+    - name: Remove network drive U
+      win_mapped_drive:
+        letter: U
+        state: absent
+
+
+    - name: Remove network drive W
+      win_mapped_drive:
+        letter: W
+        state: absent
+
+
+

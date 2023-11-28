@@ -1,0 +1,13 @@
+---
+- name: Map Disconnected Drives
+  hosts: win
+
+  tasks:
+  - name: Run MapDrives Script
+    win_shell: powershell.exe -ExecutionPolicy ByPass  C:\Scripts\MapDrives_workes\CallMapDrives.ps1 # runs powershell script to reconnect disconnected drives
+    register: result1 # parse result from PS script to var 
+
+  - name: display output from MapDrives Script
+    set_fact:
+      vms: "{{ result1.stdout | regex_findall('(?<=VM: )(.*)') }}" # displays the result from PS script
+

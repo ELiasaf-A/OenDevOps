@@ -1,0 +1,44 @@
+- name: Copy IIS website to another Windows host
+  hosts: destination_server
+  gather_facts: no
+  vars:
+    website_name: MyWebsite
+    source_path: C:\inetpub\wwwroot\MyWebsite
+    destination_path: C:\inetpub\wwwroot\MyWebsite
+    app_pool_name: MyAppPool
+    website_user: DOMAIN\username
+    website_password: your_password
+    app_pool_user: DOMAIN\username
+    app_pool_password: your_password
+  tasks:
+    - name: Stop website
+      win_iis_website:
+        name: "{{ website_name }}"
+        state: stopped
+
+ #   - name: Copy website files
+ #     win_copy:
+ #       src: "{{ source_path }}"
+ #       dest: "{{ destination_path }}"
+ #       recursive: yes
+
+    - name: Create application pool
+      win_iis_webapppool:
+        name: "{{ app_pool_name }}"
+        state: started
+        username: "{{ app_pool_user }}"
+        password: "{{ app_pool_password }}"
+
+    - name: Create website
+      win_iis_website:
+        name: "{{ website_name }}"
+        state: started
+        physical_path: "{{ destination_path }}"
+        application_pool: "{{ app_pool_name }}"
+        username: "{{ website_user }}"
+        password: "{{ website_password }}"
+
+    - name: Start website
+      win_iis_website:
+        name: "{{ website_name }}"
+        state: started

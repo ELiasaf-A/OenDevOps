@@ -1,0 +1,14 @@
+- name: UnInstalling NSClient MSI
+  hosts: devapp
+  tasks:
+    - name: UnInstall MSI(x86)
+      win_package:
+        path: \\path\NSCLIENT\NSClient++-0.3.9-Win32.msi
+        state: absent
+
+    - name: UnInstall MSI(x64)
+      win_package:
+        path: \\path\NSCLIENT\NSClient++-0.3.9-x64.msi
+        state: absent
+
+~

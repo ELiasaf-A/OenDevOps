@@ -1,0 +1,3 @@
+[13/Nov/2023:07:22:49 +0000] 400 - GET http localhost "/" [Client 192.168.65.1] [Length 252] [Gzip -] "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15" "-"
+[13/Nov/2023:07:22:49 +0000] 400 - GET http localhost "/apple-touch-icon-precomposed.png" [Client 192.168.65.1] [Length 252] [Gzip -] "Safari/19616.1.27.211.1 CFNetwork/1474.1 Darwin/23.0.0" "-"
+[13/Nov/2023:07:22:49 +0000] 400 - GET http localhost "/apple-touch-icon.png" [Client 192.168.65.1] [Length 252] [Gzip -] "Safari/19616.1.27.211.1 CFNetwork/1474.1 Darwin/23.0.0" "-"

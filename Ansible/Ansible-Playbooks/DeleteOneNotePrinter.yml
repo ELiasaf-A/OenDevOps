@@ -1,0 +1,8 @@
+---
+- name: Rmove OneNote Printer
+  hosts: app
+  tasks:
+  - name: Run PS Script
+    ansible.windows.win_powershell:
+      script: |
+        Remove-Printer -Name "OneNote (Desktop)"

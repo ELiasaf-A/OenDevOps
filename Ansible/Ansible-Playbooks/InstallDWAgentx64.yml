@@ -1,0 +1,11 @@
+---
+- name: make sure SolarWinds-Dameware-Agent msi is installed on hosts
+  hosts: name_hoste_server
+  tasks:
+  - name: install Msi DW if not present
+    ansible.windows.win_package:
+      path: \\path & SSH\SolarWinds DameWare\SolarWinds-Dameware-Agent-x64.MSI # path to msi
+      state: present
+      arguments:
+      - /passive                          # run quietly
+      - /qn                               # run quietly

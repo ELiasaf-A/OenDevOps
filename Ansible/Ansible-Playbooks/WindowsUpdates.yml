@@ -1,0 +1,20 @@
+---
+- name: Windows Update
+  hosts: iis
+  tasks:
+  - name: check windows update service and make sure its running
+    ansible.windows.win_service:
+      name: wuauserv
+      start_mode: auto
+      state: started
+
+  - name: start windows update and restart as needed
+    ansible.windows.win_updates:
+      reboot: yes
+
+  - name: check windows update service and make sure its running
+    ansible.windows.win_service:
+      name: wuauserv
+      start_mode: disabled
+      state: started
+

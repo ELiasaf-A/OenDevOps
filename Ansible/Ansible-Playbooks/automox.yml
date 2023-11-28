@@ -1,0 +1,13 @@
+---
+- name: Install Automox
+  hosts: iis
+  gather_facts: no
+  tasks:
+    - name: Install Automox
+      win_package:
+        path: \\path\Automox_Installer-1.42.22.msi
+        state: present
+        arguments:
+        - /qn
+        - AUTH_KEY=licence
+~

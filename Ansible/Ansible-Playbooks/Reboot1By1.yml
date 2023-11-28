@@ -1,0 +1,17 @@
+---
+- name: Reboot Serially
+  hosts: iis
+  serial: 1 # run 1 by 1
+  gather_facts: yes
+  tasks:
+  - name: Reboot a machine and wait
+    ansible.windows.win_reboot:
+#      post_reboot_delay: 120
+  - name: "wait for host to access web.co.il"
+    ansible.windows.win_uri:
+      url: "https://web.co.il/.../test1.html"
+      status_code: 200
+    register: result
+    until: result.status_code == 200
+    retries: 120
+    delay: 1
