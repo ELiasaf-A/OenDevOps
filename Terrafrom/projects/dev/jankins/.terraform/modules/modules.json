@@ -1,0 +1,25 @@
+{
+  "Modules": [
+    {
+      "Key": "jenkins",
+      "Source": "../../../modules/server",
+      "Dir": "../../../modules/server"
+    },
+    {
+      "Key": "jenkins.record",
+      "Source": "../dns",
+      "Dir": "../../../modules/dns"
+    },
+    {
+      "Key": "",
+      "Source": "",
+      "Dir": "."
+    },
+    {
+      "Key": "vpc",
+      "Source": "registry.terraform.io/terraform-aws-modules/vpc/aws",
+      "Version": "3.14.2",
+      "Dir": ".terraform/modules/vpc"
+    }
+  ]
+}
