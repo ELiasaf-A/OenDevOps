@@ -1,28 +1,56 @@
 ---
 - name: Install and Configure Filebeat
-  hosts: your_log_servers
-  become: yes
+  hosts: your_target_hosts
+  become: true
 
   tasks:
-    - name: Download and Install Filebeat
-      yum:
+    - name: Import GPG Key for Filebeat
+      rpm_key:
+        state: present
+        key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+
+    - name: Create Yum Repository File for Filebeat
+      copy:
+        dest: /etc/yum.repos.d/filebeat.repo
+        content: |
+          [filebeat-7.x]
+          name=Elastic repository for 7.x packages
+          baseurl=https://artifacts.elastic.co/packages/7.x/yum
+          gpgcheck=1
+          gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+          enabled=1
+          autorefresh=1
+          type=rpm-md
+
+    - name: Install Filebeat
+      dnf:
         name: filebeat
         state: present
 
     - name: Configure Filebeat
-      template:
-        src: /path/filebeat.yml.j2
+      copy:
         dest: /etc/filebeat/filebeat.yml
-      notify: restart filebeat
+        content: |
+          # Filebeat configuration
+          filebeat.inputs:
+            # Inputs configuration...
 
-    - name: Enable and Start Filebeat
+          # Additional configuration...
+
+    - name: Enable Filebeat Nginx Module
+      command: filebeat modules enable nginx
+
+    - name: Enable Filebeat System Module
+      command: filebeat modules enable system
+
+    - name: Enable Filebeat uWSGI Module
+      command: filebeat modules enable uwsgi
+
+    - name: Enable Filebeat Log Module
+      command: filebeat modules enable log
+
+    - name: Start and Enable Filebeat Service
       service:
         name: filebeat
-        enabled: yes
         state: started
-
-  handlers:
-    - name: restart filebeat
-      service:
-        name: filebeat
-        state: restarted
+        enabled: true
